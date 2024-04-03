@@ -73,105 +73,146 @@ function keyDown(event) {
   }
 }
 
+function pointCheck() {
+  const position = player.getBoundingClientRect();
+  const point1 = document.querySelectorAll(".point")[0];
+  const point2 = document.querySelectorAll(".point")[1];
+  const point3 = document.querySelectorAll(".point")[2];
+  const point4 = document.querySelectorAll(".point")[3];
+  const point5 = document.querySelectorAll(".point")[4];
+
+  const p1Position = point1.getBoundingClientRect();
+  const p2Position = point2.getBoundingClientRect();
+  const p3Position = point3.getBoundingClientRect();
+  const p4Position = point4.getBoundingClientRect();
+  const p5Position = point5.getBoundingClientRect();
+  if (
+    position.right > p1Position.left &&
+    position.left < p1Position.right &&
+    position.bottom > p1Position.top &&
+    position.top < p1Position.bottom
+  ) {
+    point1.style.display = "none";
+  }
+  if (
+    position.right > p2Position.left &&
+    position.left < p2Position.right &&
+    position.bottom > p2Position.top &&
+    position.top < p2Position.bottom
+  ) {
+    point2.style.display = "none";
+  }
+  if (
+    position.right > p3Position.left &&
+    position.left < p3Position.right &&
+    position.bottom > p3Position.top &&
+    position.top < p3Position.bottom
+  ) {
+    point3.style.display = "none";
+  }
+  if (
+    position.right > p4Position.left &&
+    position.left < p4Position.right &&
+    position.bottom > p4Position.top &&
+    position.top < p4Position.bottom
+  ) {
+    point4.style.display = "none";
+  }
+  if (
+    position.right > p5Position.left &&
+    position.left < p5Position.right &&
+    position.bottom > p5Position.top &&
+    position.top < p5Position.bottom
+  ) {
+    point5.style.display = "none";
+  }
+}
+
 const player = document.querySelector("#player");
 const playerMouth = player.querySelector(".mouth");
 let playerTop = 0;
 let playerLeft = 0;
-
 setInterval(function () {
-  if (downPressed) {
-    let position = player.getBoundingClientRect();
-    let bottomCollision = position.bottom + 1;
+  let position = player.getBoundingClientRect();
 
-    let bLeftCollionDec = document.elementFromPoint(
+  if (downPressed) {
+    let bottomCollision = position.bottom + 1;
+    let bLeftCollisionDec = document.elementFromPoint(
       position.left,
       bottomCollision
     );
-    let bRightCollionDec = document.elementFromPoint(
+    let bRightCollisionDec = document.elementFromPoint(
       position.right,
       bottomCollision
     );
+
     if (
-      bLeftCollionDec.classList.contains(`wall`) == false &&
-      bRightCollionDec.classList.contains(`wall`) == false
+      !bLeftCollisionDec.classList.contains("wall") &&
+      !bRightCollisionDec.classList.contains("wall")
     ) {
       playerTop++;
       player.style.top = playerTop + "px";
     }
-    // playerTop++;
-    // player.style.top = playerTop + "px";
-    playerMouth.classList = "down";
+    playerMouth.className = "down";
   } else if (upPressed) {
-    let position = player.getBoundingClientRect();
     let topCollision = position.top - 1;
-
-    let topLeftCollionDec = document.elementFromPoint(
+    let topLeftCollisionDec = document.elementFromPoint(
       position.left,
       topCollision
     );
-    let topRightCollionDec = document.elementFromPoint(
+    let topRightCollisionDec = document.elementFromPoint(
       position.right,
       topCollision
     );
+
     if (
-      topLeftCollionDec.classList.contains(`wall`) == false &&
-      topRightCollionDec.classList.contains(`wall`) == false
+      !topLeftCollisionDec.classList.contains("wall") &&
+      !topRightCollisionDec.classList.contains("wall")
     ) {
       playerTop--;
       player.style.top = playerTop + "px";
     }
-    // playerTop--;
-    // player.style.top = playerTop + "px";
-    playerMouth.classList = "up";
+    playerMouth.className = "up";
   } else if (leftPressed) {
-    let position = player.getBoundingClientRect();
     let leftCollision = position.left - 1;
+    let lTopCollisionDec = document.elementFromPoint(
+      leftCollision,
+      position.top
+    );
+    let lBottomCollisionDec = document.elementFromPoint(
+      leftCollision,
+      position.bottom
+    );
 
-    let lLeftCollionDec = document.elementFromPoint(
-      position.left,
-      leftCollision
-    );
-    let lRightCollionDec = document.elementFromPoint(
-      position.right,
-      leftCollision
-    );
     if (
-      lLeftCollionDec.classList.contains(`wall`) == false &&
-      lRightCollionDec.classList.contains(`wall`) == false
+      !lTopCollisionDec.classList.contains("wall") &&
+      !lBottomCollisionDec.classList.contains("wall")
     ) {
       playerLeft--;
       player.style.left = playerLeft + "px";
     }
-    // playerLeft--;
-    // player.style.left = playerLeft + "px";
-    playerMouth.classList = "left";
+    playerMouth.className = "left";
   } else if (rightPressed) {
-    let position = player.getBoundingClientRect();
     let rightCollision = position.right + 1;
+    let rTopCollisionDec = document.elementFromPoint(
+      rightCollision,
+      position.top
+    );
+    let rBottomCollisionDec = document.elementFromPoint(
+      rightCollision,
+      position.bottom
+    );
 
-    let rLeftCollionDec = document.elementFromPoint(
-      position.left,
-      rightCollision
-    );
-    let rRightCollionDec = document.elementFromPoint(
-      position.right,
-      rightCollision
-    );
     if (
-      rLeftCollionDec.classList.contains(`wall`) == false &&
-      rRightCollionDec.classList.contains(`wall`) == false
+      !rTopCollisionDec.classList.contains("wall") &&
+      !rBottomCollisionDec.classList.contains("wall")
     ) {
       playerLeft++;
       player.style.left = playerLeft + "px";
     }
-    // playerLeft++;
-    // player.style.left = playerLeft + "px";
-    playerMouth.classList = "right";
+    playerMouth.className = "right";
   }
 }, 10);
-
-// document.addEventListener('keydown', keyDown);
-// document.addEventListener('keyup', keyUp);
 
 // Start the game
 const pressToStart = document.querySelector(".start");
