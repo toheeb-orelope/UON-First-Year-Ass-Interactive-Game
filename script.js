@@ -73,61 +73,6 @@ function keyDown(event) {
   }
 }
 
-function pointCheck() {
-  const position = player.getBoundingClientRect();
-  const point1 = document.querySelectorAll(".point")[0];
-  const point2 = document.querySelectorAll(".point")[1];
-  const point3 = document.querySelectorAll(".point")[2];
-  const point4 = document.querySelectorAll(".point")[3];
-  const point5 = document.querySelectorAll(".point")[4];
-
-  const p1Position = point1.getBoundingClientRect();
-  const p2Position = point2.getBoundingClientRect();
-  const p3Position = point3.getBoundingClientRect();
-  const p4Position = point4.getBoundingClientRect();
-  const p5Position = point5.getBoundingClientRect();
-  if (
-    position.right > p1Position.left &&
-    position.left < p1Position.right &&
-    position.bottom > p1Position.top &&
-    position.top < p1Position.bottom
-  ) {
-    point1.style.display = "none";
-  }
-  if (
-    position.right > p2Position.left &&
-    position.left < p2Position.right &&
-    position.bottom > p2Position.top &&
-    position.top < p2Position.bottom
-  ) {
-    point2.style.display = "none";
-  }
-  if (
-    position.right > p3Position.left &&
-    position.left < p3Position.right &&
-    position.bottom > p3Position.top &&
-    position.top < p3Position.bottom
-  ) {
-    point3.style.display = "none";
-  }
-  if (
-    position.right > p4Position.left &&
-    position.left < p4Position.right &&
-    position.bottom > p4Position.top &&
-    position.top < p4Position.bottom
-  ) {
-    point4.style.display = "none";
-  }
-  if (
-    position.right > p5Position.left &&
-    position.left < p5Position.right &&
-    position.bottom > p5Position.top &&
-    position.top < p5Position.bottom
-  ) {
-    point5.style.display = "none";
-  }
-}
-
 const player = document.querySelector("#player");
 const playerMouth = player.querySelector(".mouth");
 let playerTop = 0;
