@@ -73,13 +73,29 @@ function keyDown(event) {
   }
 }
 
+// Point clearing function
+function pointCheck() {
+  const position = player.getBoundingClientRect();
+  const points = document.querySelectorAll(".point");
+  for (let i = 0; i < points.length; i++) {
+    let pointPosition = points[i].getBoundingClientRect();
+    if (
+      position.right > pointPosition.left &&
+      position.left < pointPosition.right &&
+      position.bottom > pointPosition.top &&
+      position.top < pointPosition.bottom
+    ) {
+      points[i].classList.remove("point");
+    }
+  }
+}
 const player = document.querySelector("#player");
 const playerMouth = player.querySelector(".mouth");
 let playerTop = 0;
 let playerLeft = 0;
 setInterval(function () {
+  pointCheck();
   let position = player.getBoundingClientRect();
-
   if (downPressed) {
     let bottomCollision = position.bottom + 1;
     let bLeftCollisionDec = document.elementFromPoint(
@@ -128,7 +144,6 @@ setInterval(function () {
       leftCollision,
       position.bottom
     );
-
     if (
       !lTopCollisionDec.classList.contains("wall") &&
       !lBottomCollisionDec.classList.contains("wall")
