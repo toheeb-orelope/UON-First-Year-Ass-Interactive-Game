@@ -19,6 +19,17 @@ let maze = [
   [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
 ];
 
+//Enemies add up
+function createEnemies() {
+  let rowInArray = Math.floor(Math.random() * maze.length);
+  let columnInArray = Math.floor(Math.random() * maze[rowInArray].length);
+  if (maze[rowInArray][columnInArray] == 0) {
+    maze[rowInArray][columnInArray] = 3;
+  } else {
+    createEnemies();
+  }
+}
+
 //Populates the maze in the HTML
 for (let y of maze) {
   for (let x of y) {
@@ -106,6 +117,18 @@ setInterval(function () {
   pointCheck();
   increaseTheScore();
 }, 100);
+
+//Live
+function createLives() {
+  let livesList = document.createElement(`li`);
+  let unorderedList = document.querySelector(`.lives ul`);
+  unorderedList.appendChild(livesList);
+}
+
+function killLives() {
+  let liveList = document.querySelector(`.lives ul li`);
+  liveList.parentNode.removeChild(li);
+}
 
 const player = document.querySelector("#player");
 const playerMouth = player.querySelector(".mouth");
