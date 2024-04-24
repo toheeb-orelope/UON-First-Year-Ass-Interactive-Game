@@ -198,32 +198,32 @@ function startTheGame() {
   document.addEventListener("keyup", keyUp);
 
   pressToStart.style.display = "none";
+
+  // Screen Button Control
+  document.querySelector("#ubttn").addEventListener("mousedown", function () {
+    upPressed = true;
+  });
+  document.querySelector("#ubttn").addEventListener("mouseup", function () {
+    upPressed = false;
+  });
+  document.querySelector("#dbttn").addEventListener("mousedown", function () {
+    downPressed = true;
+  });
+  document.querySelector("#dbttn").addEventListener("mouseup", function () {
+    downPressed = false;
+  });
+  document.querySelector("#lbttn").addEventListener("mousedown", function () {
+    leftPressed = true;
+  });
+  document.querySelector("#lbttn").addEventListener("mouseup", function () {
+    leftPressed = false;
+  });
+  document.querySelector("#rbttn").addEventListener("mousedown", function () {
+    rightPressed = true;
+  });
+  document.querySelector("#rbttn").addEventListener("mouseup", function () {
+    rightPressed = false;
+  });
 }
 
 pressToStart.addEventListener("click", startTheGame);
-
-// Screen Button Control
-document.querySelector("#ubttn").addEventListener("mousedown", function () {
-  upPressed = true;
-});
-document.querySelector("#ubttn").addEventListener("mouseup", function () {
-  upPressed = false;
-});
-document.querySelector("#dbttn").addEventListener("mousedown", function () {
-  downPressed = true;
-});
-document.querySelector("#dbttn").addEventListener("mouseup", function () {
-  downPressed = false;
-});
-document.querySelector("#lbttn").addEventListener("mousedown", function () {
-  leftPressed = true;
-});
-document.querySelector("#lbttn").addEventListener("mouseup", function () {
-  leftPressed = false;
-});
-document.querySelector("#rbttn").addEventListener("mousedown", function () {
-  rightPressed = true;
-});
-document.querySelector("#rbttn").addEventListener("mouseup", function () {
-  rightPressed = false;
-});
