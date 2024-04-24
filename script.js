@@ -89,6 +89,7 @@ function pointCheck() {
     }
   }
 }
+
 const player = document.querySelector("#player");
 const playerMouth = player.querySelector(".mouth");
 let playerTop = 0;
