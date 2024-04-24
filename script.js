@@ -73,10 +73,14 @@ function keyDown(event) {
   }
 }
 
+// global variable score
+let score = 0;
 // Point clearing function
 function pointCheck() {
   const position = player.getBoundingClientRect();
   const points = document.querySelectorAll(".point");
+  pointsDeduction = 0;
+
   for (let i = 0; i < points.length; i++) {
     let pointPosition = points[i].getBoundingClientRect();
     if (
@@ -86,16 +90,28 @@ function pointCheck() {
       position.top < pointPosition.bottom
     ) {
       points[i].classList.remove("point");
+      score++;
     }
   }
 }
+
+// Score Increment
+function increaseTheScore() {
+  const countScore = document.querySelector(`.score p`);
+  countScore.textContent = score;
+}
+
+// interval for point and score
+setInterval(function () {
+  pointCheck();
+  increaseTheScore();
+}, 100);
 
 const player = document.querySelector("#player");
 const playerMouth = player.querySelector(".mouth");
 let playerTop = 0;
 let playerLeft = 0;
 setInterval(function () {
-  pointCheck();
   let position = player.getBoundingClientRect();
   if (downPressed) {
     let bottomCollision = position.bottom + 1;
