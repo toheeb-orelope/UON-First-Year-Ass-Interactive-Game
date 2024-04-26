@@ -27,6 +27,59 @@ let maze = [
 //   }
 // }
 
+// Enemy Generator
+/*
+function createEnemies() {
+  let row = Math.floor(Math.random() * maze.length);
+  let column = Math.floor(Math.random() * maze[row].length);
+
+  if (maze[row][column] == 0) {
+    maze[row][column] = 3;
+  } else {
+    createEnemies();
+  }
+
+  const player = document.querySelector("#player");
+  let top = player.getBoundingClientRect().top;
+  let left = player.getBoundingClientRect().left;
+  let playerDirection = Math.ceil(Math.random() * 4);
+
+  setInterval(function () {
+    playerDirection = Math.ceil(Math.random() * 4);
+  }, 100);
+  setInterval(function () {
+    function leftMovement() {
+      left = left - 1;
+    }
+    function rightMovement() {
+      left = left + 1;
+    }
+    function upMovement() {
+      top = top - 1;
+    }
+    function downMovement() {
+      top = top + 1;
+    }
+
+    if (playerDirection == 1) {
+      upMovement();
+    }
+    if (playerDirection == 2) {
+      downMovement();
+    }
+    if (playerDirection == 3) {
+      rightMovement();
+    }
+    if (playerDirection == 4) {
+      leftMovement();
+    }
+
+    player.style.left = left + "px";
+    player.style.top = top + "px";
+  }, 10);
+}
+*/
+
 //Populates the maze in the HTML
 for (let y of maze) {
   for (let x of y) {
@@ -107,6 +160,18 @@ function pointCheck() {
 function increaseTheScore() {
   const countScore = document.querySelector(`.score p`);
   countScore.textContent = score;
+}
+
+//Live
+function createLives() {
+  let livesList = document.createElement(`li`);
+  let unorderedList = document.querySelector(`.lives ul`);
+  unorderedList.appendChild(livesList);
+}
+
+function killLives() {
+  let liveList = document.querySelector(`.lives ul li`);
+  liveList.parentNode.removeChild(li);
 }
 
 // interval for point and score
@@ -199,13 +264,6 @@ setInterval(function () {
   }
 }, 10);
 
-// Live
-function createLive() {
-  let listOfLives = document.createElement(`li`);
-  let unorderedListOfLives = document.querySelector(`.lives ul`);
-  unorderedListOfLives.appendChild(listOfLives);
-}
-
 // Start the game
 const pressToStart = document.querySelector(".start");
 function startTheGame() {
@@ -239,8 +297,6 @@ function startTheGame() {
   document.querySelector("#rbttn").addEventListener("mouseup", function () {
     rightPressed = false;
   });
-
-  createLive();
+  createLives();
 }
-
 pressToStart.addEventListener("click", startTheGame);
