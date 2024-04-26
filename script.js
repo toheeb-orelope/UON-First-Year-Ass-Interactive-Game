@@ -19,16 +19,13 @@ let maze = [
   [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
 ];
 
-//Enemies add up
-function createEnemies() {
-  let rowInArray = Math.floor(Math.random() * maze.length);
-  let columnInArray = Math.floor(Math.random() * maze[rowInArray].length);
-  if (maze[rowInArray][columnInArray] == 0) {
-    maze[rowInArray][columnInArray] = 3;
-  } else {
-    createEnemies();
-  }
-}
+// Randomise the Maze
+// let newMaze = [];
+// for (let i = 0; i < maze.length; i++) {
+//   for (let j = 0; j < maze[i].length; j++) {
+//     newMaze.push(maze[i][j]);
+//   }
+// }
 
 //Populates the maze in the HTML
 for (let y of maze) {
@@ -75,11 +72,11 @@ function keyUp(event) {
 function keyDown(event) {
   if (event.key === "ArrowUp" || event.target.id == "ubttn") {
     upPressed = true;
-  } else if (event.key === "ArrowDown") {
+  } else if (event.key === "ArrowDown" || event.target.id == "dbttn") {
     downPressed = true;
-  } else if (event.key === "ArrowLeft") {
+  } else if (event.key === "ArrowLeft" || event.target.id == "lbttn") {
     leftPressed = true;
-  } else if (event.key === "ArrowRight") {
+  } else if (event.key === "ArrowRight" || event.target.id == "rbttn") {
     rightPressed = true;
   }
 }
@@ -117,18 +114,6 @@ setInterval(function () {
   pointCheck();
   increaseTheScore();
 }, 100);
-
-//Live
-function createLives() {
-  let livesList = document.createElement(`li`);
-  let unorderedList = document.querySelector(`.lives ul`);
-  unorderedList.appendChild(livesList);
-}
-
-function killLives() {
-  let liveList = document.querySelector(`.lives ul li`);
-  liveList.parentNode.removeChild(li);
-}
 
 const player = document.querySelector("#player");
 const playerMouth = player.querySelector(".mouth");
@@ -250,3 +235,9 @@ function startTheGame() {
 }
 
 pressToStart.addEventListener("click", startTheGame);
+
+// Live
+function createLive() {
+  let listOfLives = document.createElement(`li`);
+  let unorderedListOfLives;
+}
