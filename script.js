@@ -199,6 +199,13 @@ setInterval(function () {
   }
 }, 10);
 
+// Live
+function createLive() {
+  let listOfLives = document.createElement(`li`);
+  let unorderedListOfLives = document.querySelector(`.lives ul`);
+  unorderedListOfLives.appendChild(listOfLives);
+}
+
 // Start the game
 const pressToStart = document.querySelector(".start");
 function startTheGame() {
@@ -232,12 +239,8 @@ function startTheGame() {
   document.querySelector("#rbttn").addEventListener("mouseup", function () {
     rightPressed = false;
   });
+
+  createLive();
 }
 
 pressToStart.addEventListener("click", startTheGame);
-
-// Live
-function createLive() {
-  let listOfLives = document.createElement(`li`);
-  let unorderedListOfLives;
-}
