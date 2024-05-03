@@ -200,34 +200,58 @@ function startTheGame() {
   pressToStart.style.display = "none";
 
   // Screen Button Control
-  document.querySelector("#ubttn").addEventListener("mousedown", function () {
-    upPressed = true;
-  });
-  document.querySelector("#ubttn").addEventListener("mouseup", function () {
-    upPressed = false;
-  });
-  document.querySelector("#dbttn").addEventListener("mousedown", function () {
-    downPressed = true;
-  });
-  document.querySelector("#dbttn").addEventListener("mouseup", function () {
-    downPressed = false;
-  });
-  document.querySelector("#lbttn").addEventListener("mousedown", function () {
-    leftPressed = true;
-  });
-  document.querySelector("#lbttn").addEventListener("mouseup", function () {
-    leftPressed = false;
-  });
-  document.querySelector("#rbttn").addEventListener("mousedown", function () {
-    rightPressed = true;
-  });
-  document.querySelector("#rbttn").addEventListener("mouseup", function () {
-    rightPressed = false;
-  });
+  // document.querySelector("#ubttn").addEventListener("mousedown", function () {
+  //   upPressed = true;
+  // });
+  // document.querySelector("#ubttn").addEventListener("mouseup", function () {
+  //   upPressed = false;
+  // });
+  // document.querySelector("#dbttn").addEventListener("mousedown", function () {
+  //   downPressed = true;
+  // });
+  // document.querySelector("#dbttn").addEventListener("mouseup", function () {
+  //   downPressed = false;
+  // });
+  // document.querySelector("#lbttn").addEventListener("mousedown", function () {
+  //   leftPressed = true;
+  // });
+  // document.querySelector("#lbttn").addEventListener("mouseup", function () {
+  //   leftPressed = false;
+  // });
+  // document.querySelector("#rbttn").addEventListener("mousedown", function () {
+  //   rightPressed = true;
+  // });
+  // document.querySelector("#rbttn").addEventListener("mouseup", function () {
+  //   rightPressed = false;
+  // });
 }
 
 pressToStart.addEventListener("click", startTheGame);
 
-function screenButton() {
-  const upButton = document.querySelector("#ubttn");
+// activating the control arrows
+let leftButton = document.getElementById("lbttn");
+leftButton.addEventListener("mousedown", goleft);
+function goleft() {
+  leftPressed = true;
 }
+
+let rightButton = document.getElementById("rbttn");
+rightButton.addEventListener("mousedown", goright);
+function goright() {
+  rightPressed = true;
+}
+
+let upButton = document.getElementById("ubttn");
+upButton.addEventListener("mousedown", gotop);
+function gotop() {
+  upPressed = true;
+}
+
+let downButton = document.getElementById("dbttn");
+downButton.addEventListener("mousedown", godown);
+function godown() {
+  downPressed = true;
+}
+
+// start.addEventListener('mousedown', startGame);
+// documents.addEventListener("click", startTheGame);
