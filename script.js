@@ -2,6 +2,8 @@ let upPressed = false;
 let downPressed = false;
 let leftPressed = false;
 let rightPressed = false;
+let lives = 3;
+let score = 0;
 
 const main = document.querySelector("main");
 
@@ -19,66 +21,38 @@ let maze = [
   [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
 ];
 
-// Randomise the Maze
-// let newMaze = [];
-// for (let i = 0; i < maze.length; i++) {
-//   for (let j = 0; j < maze[i].length; j++) {
-//     newMaze.push(maze[i][j]);
-//   }
-// }
-
-// Enemy Generator
-/*
+//Randomise enemies
 function createEnemies() {
   let row = Math.floor(Math.random() * maze.length);
-  let column = Math.floor(Math.random() * maze[row].length);
-
-  if (maze[row][column] == 0) {
-    maze[row][column] = 3;
-  } else {
-    createEnemies();
-  }
-
-  const player = document.querySelector("#player");
-  let top = player.getBoundingClientRect().top;
-  let left = player.getBoundingClientRect().left;
-  let playerDirection = Math.ceil(Math.random() * 4);
-
-  setInterval(function () {
-    playerDirection = Math.ceil(Math.random() * 4);
-  }, 100);
-  setInterval(function () {
-    function leftMovement() {
-      left = left - 1;
-    }
-    function rightMovement() {
-      left = left + 1;
-    }
-    function upMovement() {
-      top = top - 1;
-    }
-    function downMovement() {
-      top = top + 1;
-    }
-
-    if (playerDirection == 1) {
-      upMovement();
-    }
-    if (playerDirection == 2) {
-      downMovement();
-    }
-    if (playerDirection == 3) {
-      rightMovement();
-    }
-    if (playerDirection == 4) {
-      leftMovement();
-    }
-
-    player.style.left = left + "px";
-    player.style.top = top + "px";
-  }, 10);
+  let cols = Math.floor(Math.random() * maze[row].length);
+  maze[row][cols] = 3;
 }
-*/
+
+let numEnemies = 0;
+let maxEnemies = 0;
+
+// Randomize the inner layers
+for (let i = 2; i < 8; i++) {
+  for (let j = 1; j < 9; j++) {
+    if (i === 2 && j === 1) {
+      // Ensure the starting point is always empty
+      maze[i][j] = 0;
+    } else {
+      let random = Math.floor(Math.random() * 10);
+      if (random < 7) {
+        // 70% chance of being a point or empty space
+        maze[i][j] = 0;
+      } else if (random < 9 && numEnemies < maxEnemies) {
+        // 20% chance of being an enemy, but only if we haven't reached the max number of enemies
+        maze[i][j] = 3;
+        numEnemies++;
+      } else {
+        // 10% chance of being a wall
+        maze[i][j] = 1;
+      }
+    }
+  }
+}
 
 //Populates the maze in the HTML
 for (let y of maze) {
@@ -109,33 +83,52 @@ for (let y of maze) {
   }
 }
 
-//Player movement
-function keyUp(event) {
-  if (event.key === "ArrowUp") {
-    upPressed = false;
-  } else if (event.key === "ArrowDown") {
-    downPressed = false;
-  } else if (event.key === "ArrowLeft") {
-    leftPressed = false;
-  } else if (event.key === "ArrowRight") {
-    rightPressed = false;
+function moveEnemies() {
+  for (let i = 0; i < maze.length; i++) {
+    for (let j = 0; j < maze[i].length; j++) {
+      if (maze[i][j] === 3) {
+        // Move the enemy in a random direction (up, down, left, or right)
+        let direction = Math.floor(Math.random() * 4);
+        let newRow = i;
+        let newCol = j;
+        switch (direction) {
+          case 0: // Up
+            newRow = i - 1;
+            break;
+          case 1: // Down
+            newRow = i + 1;
+            break;
+          case 2: // Left
+            newCol = j - 1;
+            break;
+          case 3: // Right
+            newCol = j + 1;
+            break;
+        }
+
+        // Check for collision with the player
+        if (
+          newRow >= 0 &&
+          newRow < maze.length &&
+          newCol >= 0 &&
+          newCol < maze[newRow].length
+        ) {
+          if (maze[newRow][newCol] === 2) {
+            // Handle collision with the player
+            console.log("Enemy collided with the player!");
+          }
+        }
+
+        // Update the enemy's position in the maze
+        maze[i][j] = 0;
+        maze[newRow][newCol] = 3;
+      }
+    }
   }
 }
 
-function keyDown(event) {
-  if (event.key === "ArrowUp" || event.target.id == "ubttn") {
-    upPressed = true;
-  } else if (event.key === "ArrowDown" || event.target.id == "dbttn") {
-    downPressed = true;
-  } else if (event.key === "ArrowLeft" || event.target.id == "lbttn") {
-    leftPressed = true;
-  } else if (event.key === "ArrowRight" || event.target.id == "rbttn") {
-    rightPressed = true;
-  }
-}
-
-// global variable score
-let score = 0;
+// // global variable score
+// let score = 0;
 // Point clearing function
 function pointCheck() {
   const position = player.getBoundingClientRect();
@@ -152,6 +145,10 @@ function pointCheck() {
     ) {
       points[i].classList.remove("point");
       score++;
+      increaseTheScore();
+      if (points.length === 0) {
+        nextLevel();
+      }
     }
   }
 }
@@ -160,6 +157,35 @@ function pointCheck() {
 function increaseTheScore() {
   const countScore = document.querySelector(`.score p`);
   countScore.textContent = score;
+  // if (score > level * pointCheck()) {
+  //   nextLevel();
+  // }
+  // console.log(`q`);
+}
+
+//Player movement
+function keyUp(event) {
+  if (event.key === "ArrowUp") {
+    upPressed = false;
+  } else if (event.key === "ArrowDown") {
+    downPressed = false;
+  } else if (event.key === "ArrowLeft") {
+    leftPressed = false;
+  } else if (event.key === "ArrowRight") {
+    rightPressed = false;
+  }
+}
+
+function keyDown(event) {
+  if (event.key === "ArrowUp") {
+    upPressed = true;
+  } else if (event.key === "ArrowDown") {
+    downPressed = true;
+  } else if (event.key === "ArrowLeft") {
+    leftPressed = true;
+  } else if (event.key === "ArrowRight") {
+    rightPressed = true;
+  }
 }
 
 //Live
@@ -177,7 +203,7 @@ function killLives() {
 // interval for point and score
 setInterval(function () {
   pointCheck();
-  increaseTheScore();
+  moveEnemies();
 }, 100);
 
 const player = document.querySelector("#player");
@@ -277,26 +303,75 @@ function startTheGame() {
     upPressed = true;
   });
   document.querySelector("#ubttn").addEventListener("mouseup", function () {
-    upPressed = false;
+    upPressed = true;
   });
   document.querySelector("#dbttn").addEventListener("mousedown", function () {
     downPressed = true;
   });
   document.querySelector("#dbttn").addEventListener("mouseup", function () {
-    downPressed = false;
+    downPressed = true;
   });
   document.querySelector("#lbttn").addEventListener("mousedown", function () {
     leftPressed = true;
   });
   document.querySelector("#lbttn").addEventListener("mouseup", function () {
-    leftPressed = false;
+    leftPressed = true;
   });
   document.querySelector("#rbttn").addEventListener("mousedown", function () {
     rightPressed = true;
   });
   document.querySelector("#rbttn").addEventListener("mouseup", function () {
-    rightPressed = false;
+    rightPressed = true;
   });
+  createLives();
+  createLives();
   createLives();
 }
 pressToStart.addEventListener("click", startTheGame);
+
+//Leader Board
+let username;
+function getUsername() {
+  username = window.prompt(`Create a username:`);
+
+  return username;
+}
+
+function addUserToTheBoard(username) {
+  const userList = document.createElement(`li`);
+  const orderedList = document.querySelector(`ol`);
+  orderedList.appendChild(userList);
+
+  const userNode = document.createTextNode(username);
+  userList.appendChild(userNode);
+}
+
+function saveToLocalStorage() {
+  localStorage.setItem(localStorage.length + 1, username);
+}
+
+function getFromLocalStorate() {
+  let values = [];
+
+  for (let i = 0; i < localStorage.length; i++) {
+    let key = localStorage.key(i);
+    let value = localStorage.getItem(key);
+    values.push(value);
+  }
+
+  for (let value of values) {
+    addUserToTheBoard(value);
+  }
+}
+
+const addToLeaderboard = document.querySelector(`leaderboard`);
+function leaders() {
+  const createUsername = getUsername();
+  addUserToTheBoard(createUsername);
+  saveToLocalStorage(createUsername);
+}
+
+leaders();
+if (playerHasCompletedLevel) {
+  nextLevel();
+}
