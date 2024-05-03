@@ -227,3 +227,7 @@ function startTheGame() {
 }
 
 pressToStart.addEventListener("click", startTheGame);
+
+function screenButton() {
+  const upButton = document.querySelector("#ubttn");
+}
