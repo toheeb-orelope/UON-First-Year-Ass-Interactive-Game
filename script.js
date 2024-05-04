@@ -283,7 +283,7 @@ pressToStart.addEventListener("click", startTheGame);
 
 //Leader Board
 function getUsername() {
-  username = window.prompt(`Create a username:`);
+  // username = window.prompt(`Create a username:`);
 
   return username;
 }
