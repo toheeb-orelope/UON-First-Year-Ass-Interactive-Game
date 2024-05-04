@@ -10,13 +10,13 @@ const main = document.querySelector("main");
 //Player = 2, Wall = 1, Enemy = 3, Point = 0
 let maze = [
   [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-  [1, 2, 0, 1, 0, 0, 0, 0, 3, 1],
+  [1, 2, 5, 1, 0, 0, 0, 5, 3, 1],
   [1, 0, 0, 0, 0, 0, 0, 1, 1, 1],
   [1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
   [1, 0, 1, 1, 0, 0, 0, 0, 0, 1],
   [1, 0, 0, 0, 0, 0, 0, 1, 1, 1],
   [1, 0, 0, 1, 0, 3, 0, 0, 0, 1],
-  [1, 0, 0, 0, 0, 0, 0, 1, 0, 1],
+  [1, 0, 5, 0, 0, 0, 0, 1, 0, 1],
   [1, 3, 1, 0, 0, 0, 0, 0, 0, 1],
   [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
 ];
@@ -25,34 +25,26 @@ let maze = [
 function createEnemies() {
   let row = Math.floor(Math.random() * maze.length);
   let cols = Math.floor(Math.random() * maze[row].length);
-  maze[row][cols] = 3;
-}
-
-let numEnemies = 0;
-let maxEnemies = 0;
-
-// Randomize the inner layers
-for (let i = 2; i < 8; i++) {
-  for (let j = 1; j < 9; j++) {
-    if (i === 2 && j === 1) {
-      // Ensure the starting point is always empty
-      maze[i][j] = 0;
-    } else {
-      let random = Math.floor(Math.random() * 10);
-      if (random < 7) {
-        // 70% chance of being a point or empty space
-        maze[i][j] = 0;
-      } else if (random < 9 && numEnemies < maxEnemies) {
-        // 20% chance of being an enemy, but only if we haven't reached the max number of enemies
-        maze[i][j] = 3;
-        numEnemies++;
-      } else {
-        // 10% chance of being a wall
-        maze[i][j] = 1;
-      }
-    }
+  if (maze[row][cols] == 0) {
+    maze[row][cols] = 3;
+  } else {
+    createEnemies();
   }
 }
+
+function ranTheMaze() {
+  const row = Math.floor(Math.random() * maze.length);
+  const column = Math.floor(Math.random() * maze[row].length);
+
+  if (maze[row][column] == 0) {
+    maze[row][column] = 1;
+  } else {
+    ranTheMaze();
+  }
+}
+ranTheMaze();
+ranTheMaze();
+ranTheMaze();
 
 //Populates the maze in the HTML
 for (let y of maze) {
@@ -83,50 +75,6 @@ for (let y of maze) {
   }
 }
 
-function moveEnemies() {
-  for (let i = 0; i < maze.length; i++) {
-    for (let j = 0; j < maze[i].length; j++) {
-      if (maze[i][j] === 3) {
-        // Move the enemy in a random direction (up, down, left, or right)
-        let direction = Math.floor(Math.random() * 4);
-        let newRow = i;
-        let newCol = j;
-        switch (direction) {
-          case 0: // Up
-            newRow = i - 1;
-            break;
-          case 1: // Down
-            newRow = i + 1;
-            break;
-          case 2: // Left
-            newCol = j - 1;
-            break;
-          case 3: // Right
-            newCol = j + 1;
-            break;
-        }
-
-        // Check for collision with the player
-        if (
-          newRow >= 0 &&
-          newRow < maze.length &&
-          newCol >= 0 &&
-          newCol < maze[newRow].length
-        ) {
-          if (maze[newRow][newCol] === 2) {
-            // Handle collision with the player
-            console.log("Enemy collided with the player!");
-          }
-        }
-
-        // Update the enemy's position in the maze
-        maze[i][j] = 0;
-        maze[newRow][newCol] = 3;
-      }
-    }
-  }
-}
-
 // // global variable score
 // let score = 0;
 // Point clearing function
@@ -147,7 +95,6 @@ function pointCheck() {
       score++;
       increaseTheScore();
       if (points.length === 0) {
-        nextLevel();
       }
     }
   }
@@ -165,6 +112,11 @@ function increaseTheScore() {
 
 //Player movement
 function keyUp(event) {
+  upPressed = false;
+  downPressed = false;
+  leftPressed = false;
+  rightPressed = false;
+
   if (event.key === "ArrowUp") {
     upPressed = false;
   } else if (event.key === "ArrowDown") {
@@ -203,7 +155,7 @@ function killLives() {
 // interval for point and score
 setInterval(function () {
   pointCheck();
-  moveEnemies();
+  // moveEnemies();
 }, 100);
 
 const player = document.querySelector("#player");
@@ -330,7 +282,6 @@ function startTheGame() {
 pressToStart.addEventListener("click", startTheGame);
 
 //Leader Board
-let username;
 function getUsername() {
   username = window.prompt(`Create a username:`);
 
@@ -367,11 +318,12 @@ function getFromLocalStorate() {
 const addToLeaderboard = document.querySelector(`leaderboard`);
 function leaders() {
   const createUsername = getUsername();
-  addUserToTheBoard(createUsername);
   saveToLocalStorage(createUsername);
+  addUserToTheBoard(createUsername);
 }
 
 leaders();
-if (playerHasCompletedLevel) {
-  nextLevel();
-}
+// if (playerHasCompletedLevel) {
+//   nextLevel();
+// }
+// localStorage.clear();
