@@ -417,6 +417,7 @@ let pauseTheGame = false;
 
 let gameOver = false;
 //Track player movement and collision with player
+let collisionCheck = false;
 function isEnemyCollision() {
   const playerPosition = player.getBoundingClientRect();
   const enemies = document.querySelectorAll(".enemy");
@@ -431,12 +432,17 @@ function isEnemyCollision() {
       playerPosition.bottom > enemyPosition.top;
 
     if (collision) {
-      if (lives > 1) {
+      if (lives > 0 && collisionCheck == false) {
         lives--;
         killLives();
         // gamePaused(10);
+        collisionCheck = true;
+        player.classList.add(`hit`);
+        setTimeout(function () {
+          collisionCheck = false;
+        }, 3000);
         return;
-      } else {
+      } else if (lives == 0 && collisionCheck == false) {
         gameOver = true;
         player.classList.add("dead");
         gameOverMes();
