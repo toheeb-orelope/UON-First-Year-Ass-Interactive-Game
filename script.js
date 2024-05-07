@@ -681,3 +681,17 @@ function getFromLocalStorage() {
 
 window.addEventListener("load", getFromLocalStorage);
 // localStorage.clear();
+
+function enemiesMove() {
+  const enemies = document.querySelector(`.enemy`);
+  for (let enemy of enemies) {
+    moveMyEnemies();
+  }
+}
+
+function moveMyEnemies() {
+  let enemiesTop = 0;
+  let enemiesLeft = 0;
+
+  let directionOfEnemies = Math.ceil(Math);
+}
