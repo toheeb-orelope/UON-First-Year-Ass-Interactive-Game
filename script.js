@@ -496,6 +496,7 @@ function gameOverMes() {
   let username = getUsername();
   if (username) {
     saveToLocalStorage(username, score);
+    getFromLocalStorage(username, score);
   }
 
   const allPointTaken = document.querySelectorAll(`.point`);
@@ -644,7 +645,7 @@ function startTheGame() {
   createLives();
   createLives();
   createLives();
-  enemiesMove();
+  // enemiesMove();
 }
 pressToStart.addEventListener("click", startTheGame);
 
@@ -693,109 +694,3 @@ function getFromLocalStorage() {
 
 window.addEventListener("load", getFromLocalStorage);
 // localStorage.clear();
-
-// function enemiesMove() {
-//   const enemies = document.querySelector(`.enemy`);
-
-//   enemies.forEach((enemy) => {
-//     const enemyPosition = enemy.getBoundingClientRect();
-
-//     if (
-//       !bLeftCollisionDec.classList.contains("wall") &&
-//       !bRightCollisionDec.classList.contains("wall")
-
-//   for (let enemy of enemies) {
-//     moveMyEnemies(enemy);
-//   })
-// }
-
-// function moveMyEnemies(enemy) {
-//   let enemiesTop = 0;
-//   let enemiesLeft = 0;
-
-//   let directionOfEnemies = Math.ceil(Math.random() * 4);
-
-//   setInterval(function () {
-//     function moveEnemiesUp() {
-//       enemiesTop--;
-//     }
-//     function moveEnemiesDown() {
-//       enemiesTop++;
-//     }
-//     function moveEnemiesLeft() {
-//       enemiesLeft--;
-//     }
-//     function moveEnemiesRight() {
-//       enemiesLeft++;
-//     }
-
-//     if (directionOfEnemies == 1) {
-//       moveEnemiesUp();
-//     } else if (directionOfEnemies == 2) {
-//       moveEnemiesDown();
-//     } else if (directionOfEnemies == 3) {
-//       moveEnemiesLeft();
-//     } else if (directionOfEnemies == 4) {
-//       moveEnemiesRight();
-//     }
-//   }, 10);
-// }
-localStorage.clear;
-function enemiesMove() {
-  const enemies = document.querySelectorAll(".enemy");
-  const directions = [1, 2, 3, 4];
-
-  enemies.forEach((enemy) => {
-    enemy.direction = directions[Math.floor(Math.random() * directions.length)];
-  });
-
-  // Function to move enemies
-  function moveMyEnemies(enemy) {
-    const interval = setInterval(() => {
-      let top = parseInt(enemy.style.top) || 0;
-      let left = parseInt(enemy.style.left) || 0;
-
-      let newTop = top;
-      let newLeft = left;
-      let direction = enemy.direction;
-
-      switch (direction) {
-        case 1:
-          newTop -= 1;
-          break;
-        case 2:
-          newTop += 1;
-          break;
-        case 3:
-          newLeft -= 1;
-          break;
-        case 4:
-          newLeft += 1;
-          break;
-      }
-
-      // Check wall collisions
-      const newRow = Math.floor(newTop / 20);
-      const newCol = Math.floor(newLeft / 20);
-
-      const thisIsWall = (row, col) => {
-        return maze[row][col] === 1;
-      };
-
-      if (thisIsWall(newRow, newCol)) {
-        enemy.direction =
-          directions[Math.floor(Math.random() * directions.length)];
-      } else {
-        enemy.style.top = `${newTop}px`;
-        enemy.style.left = `${newLeft}px`;
-      }
-    }, 100);
-
-    enemy.interval = interval;
-  }
-
-  // Move each enemy
-  enemies.forEach((enemy) => {
-    moveMyEnemies(enemy);
-  });
-}
