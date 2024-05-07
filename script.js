@@ -498,8 +498,15 @@ function gameOverMes() {
     saveToLocalStorage(username, score);
   }
 
-  alert("Game Over!");
-  location.reload();
+  const allPointTaken = document.querySelectorAll(`.point`);
+  if (allPointTaken.length <= 0) {
+    alert(`Congrats!!! Level Completed`);
+    username = getUsername();
+  } else {
+    alert(`Game Over!!! You lost`);
+    player.classList.add(`dead`);
+    username = getUsername();
+  }
 
   document.removeEventListener("keydown", keyDown);
   document.removeEventListener("keyup", keyUp);
