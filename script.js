@@ -104,7 +104,7 @@
 // // interval for point and score
 // setInterval(function () {
 //   pointCheck();
-//   increaseTheScore();
+// increaseTheScore();
 // }, 100);
 
 // const player = document.querySelector("#player");
@@ -309,33 +309,6 @@ for (let y of maze) {
   }
 }
 
-// // global variable score
-// let score = 0;
-// Point clearing function
-// function pointCheck() {
-//   const position = player.getBoundingClientRect();
-//   const points = document.querySelectorAll(".point");
-//   pointsDeduction = 0;
-
-//   for (let i = 0; i < points.length; i++) {
-//     let pointPosition = points[i].getBoundingClientRect();
-//     if (
-//       position.right > pointPosition.left &&
-//       position.left < pointPosition.right &&
-//       position.bottom > pointPosition.top &&
-//       position.top < pointPosition.bottom
-//     ) {
-//       points[i].classList.remove("point");
-//       score++;
-//       increaseTheScore();
-
-//       if (points.length === 0) {
-//         checkLevelComplete();
-//       }
-//     }
-//   }
-// }
-
 function pointCheck() {
   const position = player.getBoundingClientRect();
   const points = document.querySelectorAll(".point");
@@ -363,8 +336,8 @@ function pointCheck() {
 // Score Increment
 function increaseTheScore() {
   const countScore = document.querySelector(`.score p`);
-  countScore.textContent = score;
-  nextLevel();
+  countScore.firstChild.nodeValue = score;
+  // nextLevel();
 }
 
 //Player movement
@@ -462,16 +435,6 @@ function nextLevel() {
   player.classList.remove("dead"); // Remove dead class if needed
 }
 
-function checkLevelComplete() {
-  if (allPointsCollected()) {
-    nextLevel(); // Move to the next level
-  }
-}
-
-function allPointsCollected() {
-  return document.querySelectorAll(".point").length === 0;
-}
-
 // Function to check for game pause
 function isGamePause() {
   return pauseTheGame;
@@ -485,6 +448,32 @@ function killLives() {
   }
 }
 
+function checkLevelComplete() {
+  if (collectedPoints()) {
+    nextLevel(); // Move to the next level
+  }
+}
+
+function collectedPoints() {
+  return document.querySelectorAll(".point").length === 0;
+}
+
+//Winner
+
+function youWinMes() {
+  const username = getUsername();
+  if (username) {
+    saveToLocalStorage(username, score);
+    if (collectedPoints()) {
+      alert("Congrats!!! You lost");
+      location.reload();
+    }
+  }
+
+  document.removeEventListener("keydown", keyDown);
+  document.removeEventListener("keyup", keyUp);
+}
+
 //Game over
 function gameOverMes() {
   const username = getUsername();
@@ -492,7 +481,7 @@ function gameOverMes() {
     saveToLocalStorage(username, score);
   }
 
-  alert("Game Over!");
+  alert("Game Over! You lost");
   location.reload();
 
   document.removeEventListener("keydown", keyDown);
@@ -675,3 +664,103 @@ function getFromLocalStorage() {
 
 window.addEventListener("load", getFromLocalStorage);
 // localStorage.clear();
+
+// //ENEMY MOVEMENT
+// let enemiesStartingPoint = false;
+// let enemies = document.querySelectorAll(".enemy");
+// const wallEdge = document.querySelectorAll(".wall");
+// // let enemyTop = 0;
+// // let enemyLeft = 0;
+
+// function randomNumber() {
+//   return Math.floor(Math.random() * 4) + 1;
+// }
+// let direction = randomNumber();
+
+// setInterval(function moveEnemy() {
+//   if (!enemiesStartingPoint) return;
+//   enemies = document.querySelectorAll(".enemy");
+
+//   enemies.forEach((enemy) => {
+//     let enemyPos = enemy.getBoundingClientRect();
+//     let enemyTop = parseInt(enemy.style.top) || 0; //PARSE INT SO ITS NOT RETURNING A STRING!!!!
+//     let enemyLeft = parseInt(enemy.style.left) || 0;
+//     let direction = enemy.direction || randomNumber();
+
+//     switch (direction) {
+//       case 1: // MPVE DOWN
+//         newBottom = enemyPos.bottom + 1;
+//         btmL = document.elementFromPoint(enemyPos.left, newBottom);
+//         btmR = document.elementFromPoint(enemyPos.right, newBottom);
+//         if (
+//           btmL.classList.contains("wall") == false &&
+//           btmR.classList.contains("wall") == false
+//         ) {
+//           enemyTop++;
+//         } else {
+//           direction = randomNumber();
+//         }
+//         break;
+
+//       case 2: // MOVE UP
+//         newTop = enemyPos.top - 1;
+//         topL = document.elementFromPoint(enemyPos.left, newTop);
+//         topR = document.elementFromPoint(enemyPos.right, newTop);
+//         if (
+//           topL.classList.contains("wall") == false &&
+//           topR.classList.contains("wall") == false
+//         ) {
+//           enemyTop--;
+//         } else {
+//           direction = randomNumber();
+//         }
+//         break;
+
+//       case 3: //LEFT
+//         newLeft = enemyPos.left - 1;
+//         leftTop = document.elementFromPoint(newLeft, enemyPos.top);
+//         leftBottom = document.elementFromPoint(newLeft, enemyPos.bottom);
+//         if (
+//           leftTop.classList.contains("wall") == false &&
+//           leftBottom.classList.contains("wall") == false
+//         ) {
+//           enemyLeft--;
+//         } else {
+//           direction = randomNumber();
+//         }
+//         break;
+
+//       case 4: //RIGHT
+//         newRight = enemyPos.right + 1;
+//         rightTop = document.elementFromPoint(newRight, enemyPos.top);
+//         rightBottom = document.elementFromPoint(newRight, enemyPos.bottom);
+//         if (
+//           rightTop.classList.contains("wall") == false &&
+//           rightBottom.classList.contains("wall") == false
+//         ) {
+//           enemyLeft++;
+//         } else {
+//           direction = randomNumber();
+//         }
+//         break;
+//     }
+
+//     enemy.style.top = enemyTop + "px";
+//     enemy.style.left = enemyLeft + "px";
+//     enemy.direction = direction;
+//   });
+// }, 10);
+
+function enemiesMovement() {
+  const enemies = document.querySelector(`.enemy`);
+  enemies.forEach((enemy) => {
+    moveMyEnemies(enemy);
+  });
+}
+
+function moveMyEnemies(enemy) {
+  let topMove = 0;
+  let leftMove = 0;
+
+  let enemiesDirection = Math.ceil;
+}
