@@ -645,7 +645,7 @@ function startTheGame() {
   createLives();
   createLives();
   createLives();
-  // enemiesMove();
+  moveMyEnemy();
 }
 pressToStart.addEventListener("click", startTheGame);
 
@@ -694,3 +694,74 @@ function getFromLocalStorage() {
 
 window.addEventListener("load", getFromLocalStorage);
 // localStorage.clear();
+
+function anyCollision(position, classes) {
+  const classesElement = document.querySelectorAll(`.${classes}`);
+
+  for (let i = 0; i < classesElement.length; i++) {
+    let pos = classesElement[i].getBoundingClientRect();
+    if (
+      position.right > pos.left &&
+      position.left < pos.right &&
+      position.bottom > pos.top &&
+      position.top < pos.bottom
+    ) {
+      return classesElement[i];
+    }
+  }
+  return false;
+}
+
+function moveMyEnemy() {
+  const enemies = document.querySelectorAll(`.enemy`);
+  for (let enemy of enemies) {
+    moveMyEnemies(enemy);
+  }
+}
+
+function moveMyEnemies(enemy) {
+  let moveEnemiesTop = 0;
+  let moveEnemiesLeft = 0;
+
+  let enemiesDirection = Math.ceil(Math.random() * 4);
+
+  setInterval(function () {
+    const position = enemy.getBoundingClientRect();
+
+    if (enemiesDirection == 1) {
+      if (anyCollision(position, "wall") == false) {
+        moveEnemiesTop--;
+      } else {
+        console.log(enemiesDirection);
+        enemiesDirection = Math.ceil(Math.random() * 4);
+      }
+    } else if (enemiesDirection == 2) {
+      if (anyCollision(position, "wall") == false) {
+        moveEnemiesTop++;
+      } else {
+        console.log(enemiesDirection);
+
+        enemiesDirection = Math.ceil(Math.random() * 4);
+      }
+    } else if (enemiesDirection == 3) {
+      if (anyCollision(position, "wall") == false) {
+        moveEnemiesLeft--;
+      } else {
+        console.log(enemiesDirection);
+
+        enemiesDirection = Math.ceil(Math.random() * 4);
+      }
+    } else if (enemiesDirection == 4) {
+      if (anyCollision(position, "wall") == false) {
+        moveEnemiesLeft++;
+      } else {
+        console.log(enemiesDirection);
+
+        enemiesDirection = Math.ceil(Math.random() * 4);
+      }
+    }
+
+    enemy.style.top = moveEnemiesTop + "px";
+    enemy.style.left = moveEnemiesLeft + "px";
+  }, 10);
+}
