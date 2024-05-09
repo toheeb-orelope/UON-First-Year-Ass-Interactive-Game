@@ -11,7 +11,7 @@ const main = document.querySelector("main");
 let maze = [
   [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
   [1, 2, 5, 1, 0, 0, 0, 5, 0, 1],
-  [1, 0, 0, 0, 5, 0, 0, 5, 1, 1],
+  [1, 0, 5, 0, 5, 0, 0, 5, 1, 1],
   [1, 5, 0, 0, 0, 0, 0, 5, 5, 1],
   [1, 0, 1, 1, 0, 0, 0, 0, 0, 1],
   [1, 5, 5, 0, 0, 0, 0, 1, 1, 1],
@@ -78,8 +78,7 @@ for (let y of maze) {
     main.appendChild(block);
   }
 }
-
-function pointCheck() {
+function checkPointsColli() {
   const position = player.getBoundingClientRect();
   const points = document.querySelectorAll(".point");
   pointsDeduction = 0;
@@ -99,7 +98,7 @@ function pointCheck() {
   }
 
   if (points.length === 0) {
-    checkLevelComplete();
+    isLevelComplete();
   }
 }
 
@@ -107,7 +106,7 @@ function pointCheck() {
 function increaseTheScore() {
   const countScore = document.querySelector(`.score p`);
   countScore.textContent = score;
-  nextLevel();
+  // nexLevel();
 }
 
 //Player movement
@@ -148,7 +147,6 @@ function createLives() {
 }
 
 let pauseTheGame = false;
-
 let gameOver = false;
 //Track player movement and collision with player
 let collisionCheck = false;
@@ -169,7 +167,6 @@ function isEnemyCollision() {
       if (lives > 0 && collisionCheck == false) {
         lives--;
         killLives();
-        // gamePaused(10);
         collisionCheck = true;
         player.classList.add(`hit`);
         setTimeout(function () {
@@ -178,38 +175,41 @@ function isEnemyCollision() {
         return;
       } else if (lives == 0 && collisionCheck == false) {
         gameOver = true;
-        player.classList.add("dead");
         gameOverMes();
+        player.classList.add("dead");
+        location.reload;
       }
     }
   });
 }
 
-let currentLevel = 1;
+let currLevel = 1;
 
-function nextLevel() {
-  // Increase the level number
-  currentLevel++;
-
-  // Increase the number of enemies by 1
-  createEnemies(); // Adds one more enemy to the maze
-
-  // Call the randomization function to regenerate the maze
+function nexLevel() {
+  console.log(`Its moving to another level`);
+  currLevel++;
+  console.log(`Its moving to another level: ${currLevel}`);
+  createEnemies();
+  console.log(`More enemy `);
   ranTheMaze();
+  console.log(`Maze ran`);
 
-  // Reset any necessary game states
-  gameOver = false; // Reset game-over flag
-  player.classList.remove("dead"); // Remove dead class if needed
+  gameOver = false;
+  player.classList.remove("dead");
 }
 
-function checkLevelComplete() {
-  if (allPointsCollected()) {
-    nextLevel(); // Move to the next level
+function isLevelComplete() {
+  console.log(`Checking level`);
+  if (allPointsFinished()) {
+    // nexLevel(); // Move to the next level
+    console.log(`Work`);
   }
 }
 
-function allPointsCollected() {
-  return document.querySelectorAll(".point").length === 0;
+function allPointsFinished() {
+  const allPointsTaken = document.querySelectorAll(`.point`);
+  console.log(`Point is taken: ${allPointsTaken.length}`);
+  return allPointsTaken.length === 0;
 }
 
 // Function to check for game pause
@@ -238,23 +238,21 @@ function gameOverMes() {
     alert(`Congrats!!! Level Completed`);
     document.removeEventListener("keydown", keyDown);
     document.removeEventListener("keyup", keyUp);
-    // username = getUsername();
   } else {
     alert(`Game Over!!! You lost`);
-    player.classList.add(`dead`);
     document.removeEventListener("keydown", keyDown);
     document.removeEventListener("keyup", keyUp);
-    // username = getUsername();
   }
 
-  // document.removeEventListener("keydown", keyDown);
-  // document.removeEventListener("keyup", keyUp);
+  setTimeout(() => {
+    location.reload();
+  }, 1);
 }
 
 //Interval for enemy, point
 setInterval(function () {
   if (pauseTheGame || gameOver) return;
-  pointCheck();
+  checkPointsColli();
   isEnemyCollision();
   // moveEnemies();
 }, 100);
@@ -454,48 +452,92 @@ function moveMyEnemy() {
 }
 
 function moveMyEnemies(enemy) {
-  let moveEnemiesTop = 0;
-  let moveEnemiesLeft = 0;
+  let enemiesTop = 0;
+  let enemieLeft = 0;
 
   let enemiesDirection = Math.ceil(Math.random() * 4);
 
   setInterval(function () {
-    const position = enemy.getBoundingClientRect();
-
+    let position = enemy.getBoundingClientRect();
     if (enemiesDirection == 1) {
-      if (anyCollision(position, "wall") == false) {
-        moveEnemiesTop--;
+      let bottomCollision = position.bottom + 1;
+      let bLeftCollisionDec = document.elementFromPoint(
+        position.left,
+        bottomCollision
+      );
+      let bRightCollisionDec = document.elementFromPoint(
+        position.right,
+        bottomCollision
+      );
+
+      if (
+        !bLeftCollisionDec.classList.contains("wall") &&
+        !bRightCollisionDec.classList.contains("wall")
+      ) {
+        enemiesTop++;
+        enemy.style.top = enemiesTop + "px";
       } else {
-        console.log(enemiesDirection);
         enemiesDirection = Math.ceil(Math.random() * 4);
       }
     } else if (enemiesDirection == 2) {
-      if (anyCollision(position, "wall") == false) {
-        moveEnemiesTop++;
-      } else {
-        console.log(enemiesDirection);
+      let topCollision = position.top - 1;
+      let topLeftCollisionDec = document.elementFromPoint(
+        position.left,
+        topCollision
+      );
+      let topRightCollisionDec = document.elementFromPoint(
+        position.right,
+        topCollision
+      );
 
+      if (
+        !topLeftCollisionDec.classList.contains("wall") &&
+        !topRightCollisionDec.classList.contains("wall")
+      ) {
+        enemiesTop--;
+        enemy.style.top = enemiesTop + "px";
+      } else {
         enemiesDirection = Math.ceil(Math.random() * 4);
       }
     } else if (enemiesDirection == 3) {
-      if (anyCollision(position, "wall") == false) {
-        moveEnemiesLeft--;
+      let leftCollision = position.left - 1;
+      let lTopCollisionDec = document.elementFromPoint(
+        leftCollision,
+        position.top
+      );
+      let lBottomCollisionDec = document.elementFromPoint(
+        leftCollision,
+        position.bottom
+      );
+      if (
+        !lTopCollisionDec.classList.contains("wall") &&
+        !lBottomCollisionDec.classList.contains("wall")
+      ) {
+        enemieLeft--;
+        enemy.style.left = enemieLeft + "px";
       } else {
-        console.log(enemiesDirection);
-
         enemiesDirection = Math.ceil(Math.random() * 4);
       }
     } else if (enemiesDirection == 4) {
-      if (anyCollision(position, "wall") == false) {
-        moveEnemiesLeft++;
-      } else {
-        console.log(enemiesDirection);
+      let rightCollision = position.right + 1;
+      let rTopCollisionDec = document.elementFromPoint(
+        rightCollision,
+        position.top
+      );
+      let rBottomCollisionDec = document.elementFromPoint(
+        rightCollision,
+        position.bottom
+      );
 
+      if (
+        !rTopCollisionDec.classList.contains("wall") &&
+        !rBottomCollisionDec.classList.contains("wall")
+      ) {
+        enemieLeft++;
+        enemy.style.left = enemieLeft + "px";
+      } else {
         enemiesDirection = Math.ceil(Math.random() * 4);
       }
     }
-
-    enemy.style.top = moveEnemiesTop + "px";
-    enemy.style.left = moveEnemiesLeft + "px";
   }, 10);
 }
