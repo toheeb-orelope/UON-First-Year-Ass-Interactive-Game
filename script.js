@@ -427,23 +427,7 @@ function getFromLocalStorage() {
 window.addEventListener("load", getFromLocalStorage);
 // localStorage.clear();
 
-function anyCollision(position, classes) {
-  const classesElement = document.querySelectorAll(`.${classes}`);
-
-  for (let i = 0; i < classesElement.length; i++) {
-    let pos = classesElement[i].getBoundingClientRect();
-    if (
-      position.right > pos.left &&
-      position.left < pos.right &&
-      position.bottom > pos.top &&
-      position.top < pos.bottom
-    ) {
-      return classesElement[i];
-    }
-  }
-  return false;
-}
-
+//Enemies movement
 function moveMyEnemy() {
   const enemies = document.querySelectorAll(`.enemy`);
   for (let enemy of enemies) {
