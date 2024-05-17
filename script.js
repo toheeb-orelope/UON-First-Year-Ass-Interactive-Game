@@ -2,7 +2,7 @@ let upPressed = false;
 let downPressed = false;
 let leftPressed = false;
 let rightPressed = false;
-let lives = 3;
+let lives = 2;
 let score = 0;
 
 const main = document.querySelector("main");
@@ -109,7 +109,7 @@ function increaseTheScore() {
   // nexLevel();
 }
 
-//Player movement
+////Function to track active key
 function keyUp(event) {
   upPressed = false;
   downPressed = false;
@@ -127,6 +127,7 @@ function keyUp(event) {
   }
 }
 
+//Function to track active key
 function keyDown(event) {
   if (event.key === "ArrowUp") {
     upPressed = true;
@@ -139,7 +140,7 @@ function keyDown(event) {
   }
 }
 
-//Live
+//Create lives function
 function createLives() {
   let livesList = document.createElement(`li`);
   let unorderedList = document.querySelector(`.lives ul`);
@@ -169,11 +170,13 @@ function isEnemyCollision() {
         killLives();
         collisionCheck = true;
         player.classList.add(`hit`);
+        playGameSounds("../../pacman-eatghost/eat.wav");
         setTimeout(function () {
           collisionCheck = false;
         }, 3000);
         return;
       } else if (lives == 0 && collisionCheck == false) {
+        playGameSounds("../../pacman-eatghost/dead.wav");
         gameOver = true;
         gameOverMes();
         player.classList.add("dead");
@@ -185,6 +188,7 @@ function isEnemyCollision() {
 
 let currLevel = 1;
 
+//Next level function, not working
 function nexLevel() {
   console.log(`Its moving to another level`);
   currLevel++;
@@ -198,6 +202,7 @@ function nexLevel() {
   player.classList.remove("dead");
 }
 
+//Function to check if the level is complete
 function isLevelComplete() {
   console.log(`Checking level`);
   if (allPointsFinished()) {
@@ -206,6 +211,7 @@ function isLevelComplete() {
   }
 }
 
+//Function to check if all the points is taken
 function allPointsFinished() {
   const allPointsTaken = document.querySelectorAll(`.point`);
   console.log(`Point is taken: ${allPointsTaken.length}`);
@@ -234,7 +240,7 @@ function gameOverMes() {
   }
 
   const allPointTaken = document.querySelectorAll(`.point`);
-  if (allPointTaken.length <= 0) {
+  if (allPointTaken.length <= 0 || score == 48) {
     alert(`Congrats!!! Level Completed`);
     document.removeEventListener("keydown", keyDown);
     document.removeEventListener("keyup", keyUp);
@@ -257,6 +263,7 @@ setInterval(function () {
   // moveEnemies();
 }, 100);
 
+//Player movement
 const player = document.querySelector("#player");
 const playerMouth = player.querySelector(".mouth");
 let playerTop = 0;
@@ -342,12 +349,15 @@ setInterval(function () {
 }, 10);
 
 // Start the game
+let startSound;
 const pressToStart = document.querySelector(".start");
 function startTheGame() {
   document.addEventListener("keydown", keyDown);
   document.addEventListener("keyup", keyUp);
 
   pressToStart.style.display = "none";
+
+  startSound = playGameSounds("../../pacman-eatghost/start.wav", true);
 
   // Screen Button Control
   document.querySelector("#ubttn").addEventListener("mousedown", function () {
@@ -383,8 +393,14 @@ pressToStart.addEventListener("click", startTheGame);
 
 //Leader Board
 function getUsername() {
-  username = window.prompt(`Create a username:`);
-
+  let username = "";
+  while (username === "") {
+    username = window.prompt("Create a username:");
+    // Player should not be able to cancle
+    // if (username === null) {
+    //   username = "";
+    // }
+  }
   return username;
 }
 
@@ -523,5 +539,33 @@ function moveMyEnemies(enemy) {
         enemiesDirection = Math.ceil(Math.random() * 4);
       }
     }
-  }, 10);
+  }, 1);
+}
+
+// Enemies collision sound
+// let playerCrying;
+// My Audio code edited new version of this with AI
+// function music(playerCrying) {
+//   this.playerCrying = new Audio(playerCrying);
+//   playerCrying.play();
+// }
+
+// AI Modification of my previouse code
+function playGameSounds(audioFile, autoPlaySound = false) {
+  let playerCrying = new Audio(audioFile);
+
+  if (autoPlaySound) {
+    playerCrying.autoplay = true;
+  }
+
+  playerCrying
+    .play()
+    .then(() => {
+      console.log("Audio is playing");
+    })
+    .catch((error) => {
+      console.error("Error playing audio:", error);
+    });
+
+  return playerCrying;
 }
