@@ -170,13 +170,13 @@ function isEnemyCollision() {
         killLives();
         collisionCheck = true;
         player.classList.add(`hit`);
-        playGameSounds("../../pacman-eatghost/eat.wav");
+        playGameSounds("pacman-eatghost/eat.wav");
         setTimeout(function () {
           collisionCheck = false;
         }, 3000);
         return;
       } else if (lives == 0 && collisionCheck == false) {
-        playGameSounds("../../pacman-eatghost/dead.wav");
+        playGameSounds("pacman-eatghost/dead.wav");
         gameOver = true;
         gameOverMes();
         player.classList.add("dead");
@@ -357,7 +357,7 @@ function startTheGame() {
 
   pressToStart.style.display = "none";
 
-  startSound = playGameSounds("../../pacman-eatghost/start.wav", true);
+  startSound = playGameSounds("pacman-eatghost/start.wav", true);
 
   // Screen Button Control
   document.querySelector("#ubttn").addEventListener("mousedown", function () {
